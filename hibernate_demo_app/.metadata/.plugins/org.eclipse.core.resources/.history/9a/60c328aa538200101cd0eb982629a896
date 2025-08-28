@@ -1,0 +1,13 @@
+package com.tss.JPARepository.Service;
+
+import java.util.List;
+
+import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepository.entity.Student;
+
+public interface EmployeeService {
+
+	public List<Student> readAllEmployees();
+	
+	public Student addEmployee(Employee employee);
+}

@@ -1,0 +1,5 @@
+package com.tss.JPARepository.Controller;
+
+public class StudentController {
+
+}

@@ -1,0 +1,28 @@
+package com.tss.JPARepository.Service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.tss.JPARepository.Repository.EmployeeRepository;
+import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepository.entity.Student;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+
+	@Autowired
+	private EmployeeRepository employerepo;
+	
+	@Override
+	public List<Student> readAllEmployees() {
+		employerepo.findAll()
+	}
+
+	@Override
+	public Student addEmployee(Employee employee) {
+		return null;
+	}
+
+}

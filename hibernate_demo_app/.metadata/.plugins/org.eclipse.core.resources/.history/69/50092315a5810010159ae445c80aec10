@@ -1,0 +1,8 @@
+package com.tss.JPARepository.Service;
+
+import com.tss.JPARepository.Repository.StudentRepository;
+
+public interface StudentService extends StudentRepository{
+
+	public List<Student> readAllStudents
+}

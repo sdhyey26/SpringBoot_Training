@@ -1,0 +1,25 @@
+package com.tss.JPARepository.Service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepository.entity.Student;
+
+@Service
+public class EmployeeServiceImpl implements EmployeeService {
+
+	@Override
+	public List<Student> readAllEmployees() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Student addEmployee(Employee employee) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

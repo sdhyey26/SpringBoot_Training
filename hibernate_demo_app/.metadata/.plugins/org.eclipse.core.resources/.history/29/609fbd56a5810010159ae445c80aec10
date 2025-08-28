@@ -1,0 +1,16 @@
+package com.tss.JPARepository.Service;
+
+import java.util.List;
+
+import com.tss.JPARepository.entity.Student;
+
+public class StudentServiceImpl implements StudentService{
+
+	private StudentRepository studentRepo;
+	@Override
+	public List<Student> readAllStudents() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
