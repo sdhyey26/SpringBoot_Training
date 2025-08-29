@@ -10,9 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.tss.JPARepository.Service.EmployeeServiceImpl;
 import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepositorycom.Dto.EmployeeRequestDto;
+import com.tss.JPARepositorycom.Dto.EmployeeResponseDto;
+import com.tss.JPARepositorycom.Dto.EmployeeResponsePage;
 
 
 @RestController
@@ -23,13 +28,17 @@ public class EmployeeController {
 	public EmployeeServiceImpl employeeServiceImpl;
 	
 	@GetMapping("/employees")
-	public ResponseEntity<List<Employee>> getAllEmployee(){
-		return  ResponseEntity.ok(employeeServiceImpl.readAllEmployees()) ;
+	public ResponseEntity<EmployeeResponsePage> getAllEmployee(
+			@RequestParam(defaultValue = "0") int pageNo,
+			@RequestParam(defaultValue = "10") int pagesize
+			){
+		EmployeeResponsePage reponsePage = employeeServiceImpl.readAllEmployees(pagesize, pageNo);
+		return  ResponseEntity.ok(reponsePage) ;
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Employee> saveEmployee(@RequestBody Employee employee){
-		return ResponseEntity.ok().header("author", "dhyey").body(employeeServiceImpl.addEmployee(employee));
+	public ResponseEntity<EmployeeResponseDto> saveEmployee(@RequestBody EmployeeRequestDto employee){
+		return ResponseEntity.ok().header("author", "dhyey").body(employeeServiceImpl.addNewEmployee(employee));
 	}
 	
 	@GetMapping("/employees/{id}")
@@ -41,5 +50,6 @@ public class EmployeeController {
 	public ResponseEntity<Optional<Employee>> getEmployeeByName(@PathVariable String name){
 		return ResponseEntity.ok(employeeServiceImpl.readEmployeeByName(name));
 	}
+	
 	
 }

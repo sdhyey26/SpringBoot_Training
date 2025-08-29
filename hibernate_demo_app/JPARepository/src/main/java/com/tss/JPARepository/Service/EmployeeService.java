@@ -1,17 +1,16 @@
 package com.tss.JPARepository.Service;
 
-import java.util.List;
 import java.util.Optional;
 
-import org.springframework.stereotype.Service;
-
 import com.tss.JPARepository.entity.Employee;
-import com.tss.JPARepository.entity.Student;
+import com.tss.JPARepositorycom.Dto.EmployeeRequestDto;
+import com.tss.JPARepositorycom.Dto.EmployeeResponseDto;
+import com.tss.JPARepositorycom.Dto.EmployeeResponsePage;
 
 
 public interface EmployeeService {
 
-	public List<Employee> readAllEmployees();
+	public EmployeeResponsePage readAllEmployees(int pageSize , int pageNumber);
 	
 	public Employee addEmployee(Employee employee);
 	
@@ -19,5 +18,9 @@ public interface EmployeeService {
 	
 	public Optional<Employee> readEmployeeByName(String name);
 	
+	public Employee EmployeeRequestDtotoEmployee(EmployeeRequestDto EmployeeDto);
 	
+	public EmployeeResponseDto addNewEmployee(EmployeeRequestDto EmployeeDto);
+	
+	public EmployeeResponseDto EmployeeToEmployeeResponseDto(Employee dbEmployee);
 }
