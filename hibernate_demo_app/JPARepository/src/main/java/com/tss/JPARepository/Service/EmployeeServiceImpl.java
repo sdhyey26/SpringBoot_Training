@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.tss.JPARepository.Repository.EmployeeRepository;
 import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepository.exception.EmployeeException;
 import com.tss.JPARepositorycom.Dto.EmployeeRequestDto;
 import com.tss.JPARepositorycom.Dto.EmployeeResponseDto;
 import com.tss.JPARepositorycom.Dto.EmployeeResponsePage;
@@ -22,8 +24,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 	@Autowired
 	private EmployeeRepository employerepo;
 	
+    @Autowired
+    private ModelMapper modelMapper; 
+	
 	public Optional<Employee> readEmployeeById(Integer id) {
-		return employerepo.findById(id);
+		Optional<Employee> employeeDb = employerepo.findById(id);
+		
+		if(employeeDb.isEmpty()) {
+			throw new EmployeeException("Employee not found with id: " + id);
+			
+		}
+		
+		return employeeDb;
 	}
 	
 	
@@ -103,12 +115,40 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
 	@Override
-	public EmployeeResponseDto addNewEmployee(EmployeeRequestDto EmployeeDto) {
-		// TODO Auto-generated method stub
-		Employee employee = EmployeeRequestDtotoEmployee(EmployeeDto);
-		Employee dbEmployee = employerepo.save(employee);
-		return EmployeeToEmployeeResponseDto(dbEmployee);
+	public EmployeeResponseDto addNewEmployee(EmployeeRequestDto employeeDto) {
+
+	    // Field-level validations
+	    if (employeeDto.getName() == null || employeeDto.getName().trim().isEmpty()) {
+	        throw new EmployeeException("Name must not be empty");
+	    }
+
+	    if (employeeDto.getDeptname() == null || employeeDto.getDeptname().trim().isEmpty()) {
+	        throw new EmployeeException("Department name must not be empty");
+	    }
+
+	    if (employeeDto.getSalary() <= 0) {
+	        throw new EmployeeException("Salary must be greater than 0");
+	    }
+
+	    if (employeeDto.getEmail() == null || employeeDto.getEmail().trim().isEmpty()) {
+	        throw new EmployeeException("Email must not be empty");
+	    }
+
+	    String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
+	    if (!employeeDto.getEmail().matches(emailRegex)) {
+	        throw new EmployeeException("Invalid email format");
+	    }
+
+	    if (employerepo.findByEmail(employeeDto.getEmail()).isPresent()) {
+	        throw new EmployeeException("Email already exists");
+	    }
+
+	    Employee employee = modelMapper.map(employeeDto, Employee.class);
+	    Employee dbEmployee = employerepo.save(employee);
+
+	    return modelMapper.map(dbEmployee, EmployeeResponseDto.class);
 	}
+
 
 
 	public EmployeeResponseDto EmployeeToEmployeeResponseDto(Employee dbEmployee) {

@@ -8,4 +8,7 @@ import com.tss.JPARepository.entity.Employee;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 	public Optional<Employee> findByName(String name);
+
+	public Optional<Employee> findByEmail(String email);
+	
 }

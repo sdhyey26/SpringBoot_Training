@@ -12,4 +12,6 @@ public class EmployeeResponseDto {
     private double salary;
 
 	private String deptname;
+	private String email;
+
 }

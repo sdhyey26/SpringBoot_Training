@@ -10,23 +10,27 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Table(name = "employee")
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
 public class Employee {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
     private int id;
-    @Column
+
+    @Column(nullable = false)
     private String name;
+
     @Column
     private double salary;
+
     @Column
     private String deptname;
-    
- 
+
+    @Column(unique = true, nullable = false)
+    private String email;   
 }

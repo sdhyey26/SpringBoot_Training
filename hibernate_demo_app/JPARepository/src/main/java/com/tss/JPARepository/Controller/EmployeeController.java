@@ -1,10 +1,11 @@
 package com.tss.JPARepository.Controller;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tss.JPARepository.Service.EmployeeServiceImpl;
 import com.tss.JPARepository.entity.Employee;
+import com.tss.JPARepository.error.ResponseError;
+import com.tss.JPARepository.exception.EmployeeException;
 import com.tss.JPARepositorycom.Dto.EmployeeRequestDto;
 import com.tss.JPARepositorycom.Dto.EmployeeResponseDto;
 import com.tss.JPARepositorycom.Dto.EmployeeResponsePage;
+
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -31,25 +36,38 @@ public class EmployeeController {
 	public ResponseEntity<EmployeeResponsePage> getAllEmployee(
 			@RequestParam(defaultValue = "0") int pageNo,
 			@RequestParam(defaultValue = "10") int pagesize
-			){
+			){ 
 		EmployeeResponsePage reponsePage = employeeServiceImpl.readAllEmployees(pagesize, pageNo);
 		return  ResponseEntity.ok(reponsePage) ;
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<EmployeeResponseDto> saveEmployee(@RequestBody EmployeeRequestDto employee){
-		return ResponseEntity.ok().header("author", "dhyey").body(employeeServiceImpl.addNewEmployee(employee));
+	public ResponseEntity<EmployeeResponseDto> saveEmployee(@Valid @RequestBody EmployeeRequestDto employee){
+	    EmployeeResponseDto response = employeeServiceImpl.addNewEmployee(employee);
+	    return ResponseEntity.ok()
+	            .header("author", "dhyey")
+	            .body(response);
 	}
+
 	
 	@GetMapping("/employees/{id}")
-	public ResponseEntity<Optional<Employee>> getEmployeeById(@PathVariable Integer id) {
-		return ResponseEntity.ok(employeeServiceImpl.readEmployeeById(id));
+	public ResponseEntity<Employee> getEmployeeById(@PathVariable Integer id) {
+	    Optional<Employee> employee = employeeServiceImpl.readEmployeeById(id);
+
+	    if (employee.isPresent()) {
+	        return ResponseEntity.ok(employee.get());
+	    } else {
+	        throw new EmployeeException("Employee not found with id: " + id);
+	    }
 	}
 	
 	@GetMapping("/employees/name/{name}")
 	public ResponseEntity<Optional<Employee>> getEmployeeByName(@PathVariable String name){
 		return ResponseEntity.ok(employeeServiceImpl.readEmployeeByName(name));
 	}
+	
+
+	
 	
 	
 }
